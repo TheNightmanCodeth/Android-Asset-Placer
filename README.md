@@ -2,7 +2,7 @@
 A python script to move images from archives made with Android Asset Studio into their correct directories.
 
 #Usage
-python assetplacer.py -a '/path/to/ic_archive.zip' -p '/path/to/project' -o
+>python assetplacer.py -a '/path/to/ic_archive.zip' -p '/path/to/project' -o
 
 * -a path to zip
 * -p path to project
