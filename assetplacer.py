@@ -1,0 +1,111 @@
+import sys
+import os
+import argparse
+
+def main(argv):
+	dirName = "drawable"
+	zipdir = None
+	web = False
+	delete = False
+
+	#handle arguments and set variables
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-i', '--icon', action='store_true', help='for use with launcher icons. If you selected Launcher icons in asset studio, use -i. This is used for archives that contain /res/mipmap-xxxxx',required=False)
+	parser.add_argument('-o', '--other', action='store_true', help='for use with generic images. If you selected generic icons in asset studio, use -o. This is used for archives that contain /res/drawable-xxxxx', required=False)
+	parser.add_argument('-p', '--project', help='your project directory. ie. assetplacer -p ~/AndroidStudioProjects/app_name/', required=True)
+	parser.add_argument('-a', '--archive', help='the path to your archive. ie. assetplacer -a ~/ic_image.zip', required=True)
+	parser.add_argument('-w', '--web', action='store_true', help='If you generated the web hi-res version of your image, this flag will move it to the specified directory', required=False)
+	parser.add_argument('-d', '--delete', action='store_true', help='If you want the archive deleted at the end, use -d')
+	args = vars(parser.parse_args())
+
+	#Set directory variables
+	zipdir = args['archive']
+	projDir = args['project']
+
+	#Set variables for directories. Icons are placed in ~/project/mobile/src/main/res/mipmap-xxxxx, and other would be placed in ~/project/mobile/src/main/res/drawable-xxxxx
+	if args['icon']:
+		dirName = 'mipmap'
+	elif args['other']:
+		dirName = 'drawable'
+	else:
+		print 'Missing -i or -o argument. Use -h for usage'
+		sys.exit()
+
+	#If zip directory or project directory is missing we can't do anything
+	if zipdir is None:
+		print "ERROR: Required argumnent -a missing"
+		usage()
+		
+	if projDir is None:
+		print "ERROR: Required argument -p missing"
+		usage()
+		
+	#Make a temporary directory to extract the zip. Will be deleted later
+	print 'Making temporary directory...'
+	os.system('mkdir ~/assetplacer_temp/')
+	os.system('unzip %s -d ~/assetplacer_temp/' %(zipdir))
+
+	#Make sure the path exists. Sometimes a project directory won't have a drawable-xxxxx folder. I'm pretty sure they all have the mipmap dirs but we'll check for those too just in case
+	print 'Making sure directories exist...'
+	if os.path.exists("%s/mobile/src/main/res/%s-hdpi/" %(projDir, dirName)):
+		print 'Moving hdpi...'
+		os.system('cp ~/assetplacer_temp/res/%s-hdpi/* %s/mobile/src/main/res/%s-hdpi/' %(dirName, projDir, dirName))
+	else:
+		#The directory isn't there, so we have to create it before we move anything
+		print 'Making drawable-hdpi directory and moving files...'
+		os.system('mkdir %s/mobile/src/main/res/%s-hdpi/' %(projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-hdpi/* %s/mobile/src/main/res/%s-hdpi/' %(dirName, projDir, dirName))
+
+	if os.path.exists("%s/mobile/src/main/res/%s-mdpi/" %(projDir, dirName)):
+		print 'Moving mdpi...'
+		os.system('cp ~/assetplacer_temp/res/%s-mdpi/* %s/mobile/src/main/res/%s-mdpi/' %(dirName, projDir, dirName))
+	else:
+		#The directory isn't there, so we have to create it before we move anything
+		print 'Making drawable-mdpi directory and moving files...'
+		os.system('mkdir %s/mobile/src/main/res/%s-mdpi/' %(projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-mdpi/* %s/mobile/src/main/res/%s-mdpi/' %(dirName, projDir, dirName))
+
+	if os.path.exists("%s/mobile/src/main/res/%s-xhdpi/" %(projDir, dirName)):
+		print 'Moving xhdpi...'
+		os.system('cp ~/assetplacer_temp/res/%s-xhdpi/* %s/mobile/src/main/res/%s-xhdpi/' %(dirName, projDir, dirName))
+	else:
+		#The directory isn't there, so we have to create it before we move anything
+		print 'Making drawable-xhdpi directory and moving files...'
+		os.system('mkdir %s/mobile/src/main/res/%s-xhdpi/' %(projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xhdpi/* %s/mobile/src/main/res/%s-xhdpi/' %(dirName, projDir, dirName))
+
+	if os.path.exists("%s/mobile/src/main/res/%s-xxhdpi/" %(projDir, dirName)):
+		print 'Moving xxhdpi...'
+		os.system('cp ~/assetplacer_temp/res/%s-xxhdpi/* %s/mobile/src/main/res/%s-xxhdpi/' %(dirName, projDir, dirName))
+	else:
+		#The directory isn't there, so we have to create it before we move anything
+		print 'Making drawable-xxhdpi directory and moving files...'
+		os.system('mkdir %s/mobile/src/main/res/%s-xxhdpi/' %(projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xxhdpi/* %s/mobile/src/main/res/%s-xxhdpi/' %(dirName, projDir, dirName))
+
+	if os.path.exists("%s/mobile/src/main/res/%s-xxxhdpi/" %(projDir, dirName)):
+		print 'Moving xxxhdpi...'
+		os.system('cp ~/assetplacer_temp/res/%s-xxxhdpi/* %s/mobile/src/main/res/%s-xxxhdpi/' %(dirName, projDir, dirName))
+	else:
+		#The directory isn't there, so we have to create it before we move anything
+		print 'Making drawable-xxxhdpi directory and moving files...'
+		os.system('mkdir %s/mobile/src/main/res/%s-xxxhdpi/' %(projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xxxhdpi/* %s/mobile/src/main/res/%s-xxxhdpi/' %(dirName, projDir, dirName))
+
+	#If the -w argument was passed we need to move the web-hi-res version into the project root
+	if web:
+		print 'Moving web-hi-res to home directory...'
+		os.system('cp ~/assetplacer_temp/*.png %s' %(projDir))
+
+	#Delete the temporary directory
+	print 'Deleting temporary directory...'
+	os.system('rm -rf ~/assetplacer_temp')
+
+	#If the -d argument was passed, we want to delete the archive now.
+	if delete:
+		print 'Deleting archive...'
+		os.system('rm %s' %(zipdir))
+	pass
+
+if __name__ == "__main__":
+    main(sys.argv)
