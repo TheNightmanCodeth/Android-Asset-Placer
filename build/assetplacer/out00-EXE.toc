@@ -1,0 +1,9 @@
+('/home/joe/Documents/Assetplacer/build/assetplacer/assetplacer',
+ True,
+ False,
+ None,
+ None,
+ [],
+ None,
+ False,
+ 1443651720)
