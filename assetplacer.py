@@ -5,8 +5,6 @@ import argparse
 def main(argv):
 	dirName = "drawable"
 	zipdir = None
-	web = False
-	delete = False
 
 	#handle arguments and set variables
 	parser = argparse.ArgumentParser()
@@ -91,7 +89,7 @@ def main(argv):
 		os.system('cp ~/assetplacer_temp/res/%s-xxxhdpi/* %s/mobile/src/main/res/%s-xxxhdpi/' %(dirName, projDir, dirName))
 
 	#If the -w argument was passed we need to move the web-hi-res version into the project root
-	if web:
+	if args['web']:
 		print 'Moving web-hi-res to home directory...'
 		os.system('cp ~/assetplacer_temp/*.png %s' %(projDir))
 
@@ -100,7 +98,7 @@ def main(argv):
 	os.system('rm -rf ~/assetplacer_temp')
 
 	#If the -d argument was passed, we want to delete the archive now.
-	if delete:
+	if args['delete']:
 		print 'Deleting archive...'
 		os.system('rm %s' %(zipdir))
 	pass
