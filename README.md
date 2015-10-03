@@ -29,4 +29,4 @@ A python script to move images from archives made with Android Asset Studio into
 * -d use to delete the archive when done
 
 For example, If you had a zip called ic_launcher.zip in your home directory, your project path is ~/AndroidStudioProjects/Highdeas/, you generated the web-hi-res version of your icon, and you wated to delete the archive when finished, this is what you would run:
-> assetplacer -a '~/ic_launcher.zip' -p '~/AndroidStudioProjects/Highdeas/' -i -o -d
+> assetplacer -a '~/ic_launcher.zip' -p '~/AndroidStudioProjects/Highdeas/' -i -w -d
