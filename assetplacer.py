@@ -34,12 +34,10 @@ def main(argv):
 	#If zip directory or project directory is missing we can't do anything
 	if zipdir is None:
 		print "ERROR: Required argumnent -a missing"
-		usage()
 		
 	if projDir is None:
 		print "ERROR: Required argument -p missing"
-		usage()
-		
+
 	#Make a temporary directory to extract the zip. Will be deleted later
 	print 'Making temporary directory...'
 	os.system('mkdir ~/assetplacer_temp/')
