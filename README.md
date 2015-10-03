@@ -13,7 +13,9 @@ A python script to move images from archives made with Android Asset Studio into
 
 # Installation (Ubuntu)
 > sudo add-apt-repository ppa:joyod3/androidassetplacer
+
 > sudo apt-get update
+
 > sudo apt-get install assetplacer
 
 # Usage (Ubuntu)
