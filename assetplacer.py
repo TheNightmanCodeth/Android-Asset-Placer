@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import os
 import argparse
@@ -5,6 +6,7 @@ import argparse
 def main(argv):
 	dirName = "drawable"
 	zipdir = None
+	extractTo = "mobile"
 
 	#handle arguments and set variables
 	parser = argparse.ArgumentParser()
@@ -20,7 +22,7 @@ def main(argv):
 	zipdir = args['archive']
 	projDir = args['project']
 
-	#Set variables for directories. Icons are placed in ~/project/mobile/src/main/res/mipmap-xxxxx, and other would be placed in ~/project/mobile/src/main/res/drawable-xxxxx
+	#Set variables for directories. Icons are placed in ~/project/(mobile, app, or wear)/src/main/res/mipmap-xxxxx, and other would be placed in ~/project/mobile/src/main/res/drawable-xxxxx
 	if args['icon']:
 		dirName = 'mipmap'
 	elif args['other']:
@@ -32,9 +34,19 @@ def main(argv):
 	#If zip directory or project directory is missing we can't do anything
 	if zipdir is None:
 		print "ERROR: Required argumnent -a missing"
-		
+		usage()
+
 	if projDir is None:
 		print "ERROR: Required argument -p missing"
+		usage()
+
+	if os.path_exists("%s/mobile" %(projDir)):
+		extractTo = "mobile"
+	#else if os.path_exists("%s/wear" %(projDir)):
+		#extractTo = "wear"
+		#TODO: add wear support (probably via -w flag)
+	else:
+		extractTo = "app"
 
 	#Make a temporary directory to extract the zip. Will be deleted later
 	print 'Making temporary directory...'
@@ -43,50 +55,50 @@ def main(argv):
 
 	#Make sure the path exists. Sometimes a project directory won't have a drawable-xxxxx folder. I'm pretty sure they all have the mipmap dirs but we'll check for those too just in case
 	print 'Making sure directories exist...'
-	if os.path.exists("%s/mobile/src/main/res/%s-hdpi/" %(projDir, dirName)):
+	if os.path.exists("%s/%s/src/main/res/%s-hdpi/" %(projDir, extractTo, dirName)):
 		print 'Moving hdpi...'
-		os.system('cp ~/assetplacer_temp/res/%s-hdpi/* %s/mobile/src/main/res/%s-hdpi/' %(dirName, projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-hdpi/* %s/%s/src/main/res/%s-hdpi/' %(dirName, projDir, extractTo, dirName))
 	else:
 		#The directory isn't there, so we have to create it before we move anything
 		print 'Making drawable-hdpi directory and moving files...'
-		os.system('mkdir %s/mobile/src/main/res/%s-hdpi/' %(projDir, dirName))
-		os.system('cp ~/assetplacer_temp/res/%s-hdpi/* %s/mobile/src/main/res/%s-hdpi/' %(dirName, projDir, dirName))
+		os.system('mkdir %s/%s/src/main/res/%s-hdpi/' %(projDir, exportTo, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-hdpi/* %s/%s/src/main/res/%s-hdpi/' %(dirName, projDir, exportTo, dirName))
 
-	if os.path.exists("%s/mobile/src/main/res/%s-mdpi/" %(projDir, dirName)):
+	if os.path.exists("%s/%s/src/main/res/%s-mdpi/" %(projDir, exportTo, dirName)):
 		print 'Moving mdpi...'
-		os.system('cp ~/assetplacer_temp/res/%s-mdpi/* %s/mobile/src/main/res/%s-mdpi/' %(dirName, projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-mdpi/* %s/%s/src/main/res/%s-mdpi/' %(dirName, projDir, exportTo, dirName))
 	else:
 		#The directory isn't there, so we have to create it before we move anything
 		print 'Making drawable-mdpi directory and moving files...'
-		os.system('mkdir %s/mobile/src/main/res/%s-mdpi/' %(projDir, dirName))
-		os.system('cp ~/assetplacer_temp/res/%s-mdpi/* %s/mobile/src/main/res/%s-mdpi/' %(dirName, projDir, dirName))
+		os.system('mkdir %s/%s/src/main/res/%s-mdpi/' %(projDir, exportTo, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-mdpi/* %s/%s/src/main/res/%s-mdpi/' %(dirName, projDir, exportTo, dirName))
 
-	if os.path.exists("%s/mobile/src/main/res/%s-xhdpi/" %(projDir, dirName)):
+	if os.path.exists("%s/%s/src/main/res/%s-xhdpi/" %(projDir, exportTo, dirName)):
 		print 'Moving xhdpi...'
-		os.system('cp ~/assetplacer_temp/res/%s-xhdpi/* %s/mobile/src/main/res/%s-xhdpi/' %(dirName, projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xhdpi/* %s/%s/src/main/res/%s-xhdpi/' %(dirName, projDir, exportTo, dirName))
 	else:
 		#The directory isn't there, so we have to create it before we move anything
 		print 'Making drawable-xhdpi directory and moving files...'
-		os.system('mkdir %s/mobile/src/main/res/%s-xhdpi/' %(projDir, dirName))
-		os.system('cp ~/assetplacer_temp/res/%s-xhdpi/* %s/mobile/src/main/res/%s-xhdpi/' %(dirName, projDir, dirName))
+		os.system('mkdir %s/%s/src/main/res/%s-xhdpi/' %(projDir, exportTo, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xhdpi/* %s/%s/src/main/res/%s-xhdpi/' %(dirName, projDir, exportTo dirName))
 
-	if os.path.exists("%s/mobile/src/main/res/%s-xxhdpi/" %(projDir, dirName)):
+	if os.path.exists("%s/%s/src/main/res/%s-xxhdpi/" %(projDir, exportTo dirName)):
 		print 'Moving xxhdpi...'
-		os.system('cp ~/assetplacer_temp/res/%s-xxhdpi/* %s/mobile/src/main/res/%s-xxhdpi/' %(dirName, projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xxhdpi/* %s/%s/src/main/res/%s-xxhdpi/' %(dirName, projDir, exportTo, dirName))
 	else:
 		#The directory isn't there, so we have to create it before we move anything
 		print 'Making drawable-xxhdpi directory and moving files...'
-		os.system('mkdir %s/mobile/src/main/res/%s-xxhdpi/' %(projDir, dirName))
-		os.system('cp ~/assetplacer_temp/res/%s-xxhdpi/* %s/mobile/src/main/res/%s-xxhdpi/' %(dirName, projDir, dirName))
+		os.system('mkdir %s/%s/src/main/res/%s-xxhdpi/' %(projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xxhdpi/* %s/%s/src/main/res/%s-xxhdpi/' %(dirName, projDir, exportTo, dirName))
 
-	if os.path.exists("%s/mobile/src/main/res/%s-xxxhdpi/" %(projDir, dirName)):
+	if os.path.exists("%s/%s/src/main/res/%s-xxxhdpi/" %(projDir, exportTo dirName)):
 		print 'Moving xxxhdpi...'
-		os.system('cp ~/assetplacer_temp/res/%s-xxxhdpi/* %s/mobile/src/main/res/%s-xxxhdpi/' %(dirName, projDir, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xxxhdpi/* %s/%s/src/main/res/%s-xxxhdpi/' %(dirName, projDir, exportTo, dirName))
 	else:
 		#The directory isn't there, so we have to create it before we move anything
 		print 'Making drawable-xxxhdpi directory and moving files...'
-		os.system('mkdir %s/mobile/src/main/res/%s-xxxhdpi/' %(projDir, dirName))
-		os.system('cp ~/assetplacer_temp/res/%s-xxxhdpi/* %s/mobile/src/main/res/%s-xxxhdpi/' %(dirName, projDir, dirName))
+		os.system('mkdir %s/%s/src/main/res/%s-xxxhdpi/' %(projDir, exportTo, dirName))
+		os.system('cp ~/assetplacer_temp/res/%s-xxxhdpi/* %s/%s/src/main/res/%s-xxxhdpi/' %(dirName, projDir, exportTo, dirName))
 
 	#If the -w argument was passed we need to move the web-hi-res version into the project root
 	if args['web']:
